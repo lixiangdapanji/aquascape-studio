@@ -1,0 +1,10 @@
+{
+  "name": "@aquascape/ui",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "echo 'ui build placeholder'",
+    "typecheck": "echo 'ui typecheck placeholder'",
+    "test": "echo 'no tests yet'"
+  }
+}

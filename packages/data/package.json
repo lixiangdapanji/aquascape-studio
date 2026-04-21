@@ -1,0 +1,11 @@
+{
+  "name": "@aquascape/data",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "echo 'data build placeholder'",
+    "typecheck": "echo 'data typecheck placeholder'",
+    "test": "echo 'no tests yet'",
+    "validate": "echo 'data validate placeholder'"
+  }
+}

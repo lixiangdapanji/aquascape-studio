@@ -1,0 +1,10 @@
+{
+  "name": "@aquascape/sim",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "echo 'sim build placeholder'",
+    "typecheck": "echo 'sim typecheck placeholder'",
+    "test": "echo 'no tests yet'"
+  }
+}

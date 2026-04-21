@@ -1,0 +1,10 @@
+{
+  "name": "@aquascape/render",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "echo 'render build placeholder'",
+    "typecheck": "echo 'render typecheck placeholder'",
+    "test": "echo 'no tests yet'"
+  }
+}
