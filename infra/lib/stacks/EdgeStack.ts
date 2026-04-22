@@ -9,11 +9,14 @@ import {
   HttpVersion,
   AllowedMethods,
   CachedMethods,
+  OriginProtocolPolicy,
+  OriginRequestPolicy,
 } from "aws-cdk-lib/aws-cloudfront";
-import { S3BucketOrigin } from "aws-cdk-lib/aws-cloudfront-origins";
+import { S3BucketOrigin, LoadBalancerV2Origin } from "aws-cdk-lib/aws-cloudfront-origins";
 import { Certificate, CertificateValidation } from "aws-cdk-lib/aws-certificatemanager";
 import { HostedZone, ARecord, AaaaRecord, RecordTarget } from "aws-cdk-lib/aws-route53";
 import { CloudFrontTarget } from "aws-cdk-lib/aws-route53-targets";
+import type { IApplicationLoadBalancer } from "aws-cdk-lib/aws-elasticloadbalancingv2";
 
 export interface EdgeStackProps extends StackProps {
   envName: "dev" | "stage" | "prod";
@@ -74,7 +77,6 @@ export class EdgeStack extends Stack {
       priceClass: PriceClass.PRICE_CLASS_100,
       httpVersion: HttpVersion.HTTP2_AND_3,
       defaultRootObject: "index.html",
-      defaultTtl: Duration.minutes(5),
       enableLogging: props.envName === "prod",
     });
 

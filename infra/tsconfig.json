@@ -9,6 +9,8 @@
     "declaration": true,
     "resolveJsonModule": true,
     "verbatimModuleSyntax": false,
+    "exactOptionalPropertyTypes": false,
+    "noUncheckedIndexedAccess": false,
     "types": ["node"]
   },
   "include": ["bin/**/*.ts", "lib/**/*.ts"],

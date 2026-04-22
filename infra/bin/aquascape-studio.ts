@@ -1,4 +1,4 @@
-#\!/usr/bin/env node
+#!/usr/bin/env node
 import "source-map-support/register";
 import * as cdk from "aws-cdk-lib";
 import { BootstrapStack } from "../lib/stacks/BootstrapStack";
@@ -33,11 +33,12 @@ const common = {
 const network = new NetworkStack(app, `AquascapeStudio-Network-${envName}`, common);
 const edge = new EdgeStack(app, `AquascapeStudio-Edge-${envName}`, {
   ...common,
-  subdomain: envName === "prod" ? undefined : envName,
+  ...(envName !== "prod" ? { subdomain: envName } : {}),
 });
 const appStack = new AppStack(app, `AquascapeStudio-App-${envName}`, {
   ...common,
   vpc: network.vpc,
+  distribution: edge.distribution,
 });
 appStack.addDependency(network);
 appStack.addDependency(edge);
