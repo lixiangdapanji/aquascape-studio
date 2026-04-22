@@ -1,53 +1,85 @@
 # aquascape-studio
 
-A planted-aquarium platform: design a tank in 3D, simulate the plants growing under your light + CO₂ + dosing, share scapes.
+Glue repo for the **aquascape-studio** product — a planted-aquarium
+design tool with a patented growth-simulation engine.
 
-> **First time here?** Read [`BOOTSTRAP.md`](./BOOTSTRAP.md) — it walks you through creating the GitHub repo, AWS bootstrap, GoDaddy → Route53 delegation, and the first deploy.
+This repo does **not** contain application code. All code lives in the
+nine leaf repos referenced as git submodules under `repos/`. The glue
+repo owns:
 
-## Stack
+- `BOOTSTRAP.md`          one-time account + domain + secrets setup
+- `repos/`                submodule pins (known-good SHAs for each leaf)
+- `e2e/`                  cross-repo end-to-end Playwright tests
+- `docs/`                 architecture, ADRs, runbook, patent status
 
-- **Web**: Next.js 15 (App Router, RSC) + Tailwind
-- **Mobile**: Expo / React Native 0.76 + NativeWind
-- **3D**: Three.js + React Three Fiber
-- **Sim**: TypeScript, Web Worker on browser, Node CLI for batch
-- **Infra**: AWS CDK v2 (TypeScript), us-east-1
-- **CI/CD**: GitHub Actions + OIDC (no long-lived AWS keys)
-- **Monorepo**: pnpm workspaces + Turborepo
+## The 9 leaf repos
 
-## Layout
+| repo                 | role                                  | tech                         |
+| -------------------- | ------------------------------------- | ---------------------------- |
+| `aquascape-proto`    | gRPC contract (source of truth)       | Protobuf + buf               |
+| `aquascape-infra`    | AWS cloud (CDK)                       | TypeScript CDK               |
+| `aquascape-botany`   | aquatic-plant knowledge base          | JSON + JS/TS + Python bindings |
+| `aquascape-sim`      | growth simulation (patented)          | Python + grpcio + numpy      |
+| `aquascape-api`      | edge API                              | Rust + tonic + DynamoDB      |
+| `aquascape-ui`       | shared React primitives               | TS + Tailwind                |
+| `aquascape-render`   | 3D aquarium renderer                  | three.js + R3F               |
+| `aquascape-web`      | web app                               | Next.js 15 + Connect-ES      |
+| `aquascape-mobile`   | mobile app                            | Expo / React Native          |
 
 ```
-aquascape-studio/
-├── apps/
-│   ├── web/              # Next.js 15      (app-agent owns)
-│   └── mobile/           # Expo SDK 52     (app-agent owns)
-├── packages/
-│   ├── ui/               # shared RN+RSC   (app-agent owns)
-│   ├── render/           # Three.js + R3F  (render-agent owns)
-│   ├── sim/              # growth algo     (sim-agent owns)
-│   └── data/             # plants.json     (botany-agent owns)
-├── infra/                # AWS CDK         (infra-agent owns)
-├── docs/
-│   ├── patent/           # provisional patent (sim-agent + patent-drafting skill)
-│   ├── plants/           # citations + photos
-│   └── agent-log.md      # cross-agent activity
-└── .github/workflows/    # CI/CD            (infra-agent owns)
+       aquascape-proto  ─────► every consumer (as submodule pin)
+               │
+        ┌──────┴───────┐
+        │              │
+   aquascape-sim   aquascape-api ───► aquascape-web / aquascape-mobile
+                          │                      │
+                          └─────► DynamoDB       └─► aquascape-ui + aquascape-render
+                                                                     │
+                                                              aquascape-botany
 ```
 
-## Quick commands
+## Clone & bootstrap
 
 ```bash
-pnpm install
-pnpm dev          # all apps in parallel
-pnpm typecheck
-pnpm test
-pnpm --filter web build
-pnpm --filter infra cdk deploy --context env=dev
+git clone --recurse-submodules https://github.com/lixiangdapanji/aquascape-studio.git
+cd aquascape-studio
 ```
 
-## Contributing
+If you already cloned without recursing:
 
-Each subdirectory under `apps/` and `packages/` is owned by exactly one agent. The orchestrator (any Claude session with the `aquascape-studio` plugin installed) reviews PRs and owns shared schemas. See `agents/` in the plugin and `skills/aquascape-workflow` for delegation rules.
+```bash
+npm run submodules:init
+```
+
+Update every submodule to its current remote `main` tip:
+
+```bash
+npm run submodules:update
+```
+
+Then read [`BOOTSTRAP.md`](./BOOTSTRAP.md) for the one-time AWS / GitHub
+/ domain setup.
+
+## Why a glue repo?
+
+The application is a polyrepo, not a monorepo. Each leaf repo:
+
+- has its own `main`, CI, release cadence, and AWS deploy role
+- pins the `aquascape-proto` SHA it was built against
+- publishes its artifact (container image, npm package, or wheel)
+- is owned by one agent in the plugin (`sim-agent`, `render-agent`, …)
+
+The glue repo exists so a human can check out **the exact set of SHAs
+that pass E2E together** with a single recursive clone, and so that
+product-level concerns (E2E, architecture docs, cross-repo runbook,
+patent filing) have a home that isn't tied to any single service.
+
+## Where the patent lives
+
+The provisional patent application — the thing that turns this into an
+"invention" — is drafted inside `aquascape-sim/docs/patent/`. That's
+where the novel algorithm actually is, and USPTO requires the spec and
+claims to match the disclosed reduction to practice.
 
 ## License
 

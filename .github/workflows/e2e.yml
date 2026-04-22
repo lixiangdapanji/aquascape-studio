@@ -1,0 +1,43 @@
+name: e2e
+
+on:
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: "Target deployed environment"
+        default: "https://dev.efferves.live"
+        required: true
+  schedule:
+    # Every morning at 14:00 UTC (07:00 PT) against dev.
+    - cron: "0 14 * * *"
+
+concurrency:
+  group: e2e-${{ github.event.inputs.base_url || 'dev' }}
+  cancel-in-progress: true
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      BASE_URL: ${{ github.event.inputs.base_url || 'https://dev.efferves.live' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npx playwright test --config=e2e/playwright.config.ts
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14

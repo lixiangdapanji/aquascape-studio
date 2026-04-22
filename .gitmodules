@@ -1,0 +1,36 @@
+[submodule "repos/aquascape-proto"]
+	path = repos/aquascape-proto
+	url = https://github.com/lixiangdapanji/aquascape-proto.git
+	branch = main
+[submodule "repos/aquascape-infra"]
+	path = repos/aquascape-infra
+	url = https://github.com/lixiangdapanji/aquascape-infra.git
+	branch = main
+[submodule "repos/aquascape-botany"]
+	path = repos/aquascape-botany
+	url = https://github.com/lixiangdapanji/aquascape-botany.git
+	branch = main
+[submodule "repos/aquascape-sim"]
+	path = repos/aquascape-sim
+	url = https://github.com/lixiangdapanji/aquascape-sim.git
+	branch = main
+[submodule "repos/aquascape-api"]
+	path = repos/aquascape-api
+	url = https://github.com/lixiangdapanji/aquascape-api.git
+	branch = main
+[submodule "repos/aquascape-ui"]
+	path = repos/aquascape-ui
+	url = https://github.com/lixiangdapanji/aquascape-ui.git
+	branch = main
+[submodule "repos/aquascape-render"]
+	path = repos/aquascape-render
+	url = https://github.com/lixiangdapanji/aquascape-render.git
+	branch = main
+[submodule "repos/aquascape-web"]
+	path = repos/aquascape-web
+	url = https://github.com/lixiangdapanji/aquascape-web.git
+	branch = main
+[submodule "repos/aquascape-mobile"]
+	path = repos/aquascape-mobile
+	url = https://github.com/lixiangdapanji/aquascape-mobile.git
+	branch = main

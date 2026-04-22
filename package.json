@@ -2,22 +2,18 @@
   "name": "aquascape-studio",
   "version": "0.0.0",
   "private": true,
-  "packageManager": "pnpm@9.12.0",
+  "description": "Glue repo for aquascape-studio — submodule pins, integration tests, E2E, and docs. Application code lives in the aquascape-* leaf repos.",
   "engines": {
     "node": ">=22.0.0"
   },
   "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev --parallel",
-    "lint": "turbo run lint",
-    "typecheck": "turbo run typecheck",
-    "test": "turbo run test",
-    "format": "prettier --write \"**/*.{ts,tsx,md,json}\""
+    "submodules:init": "git submodule update --init --recursive",
+    "submodules:update": "git submodule update --remote --merge",
+    "e2e": "playwright test --config=e2e/playwright.config.ts",
+    "e2e:install": "playwright install --with-deps chromium"
   },
   "devDependencies": {
-    "@types/node": "^22.7.0",
-    "prettier": "^3.3.3",
-    "turbo": "^2.1.0",
+    "@playwright/test": "^1.48.0",
     "typescript": "^5.6.0"
   }
 }
